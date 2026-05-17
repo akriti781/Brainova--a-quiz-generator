@@ -13,7 +13,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-API_KEY = "AIzaSyBtVdmUp9BtJq9g4mxDt6kRp-PNjp-47z4"
+API_KEY = "API_KEY = "your_real_key""
 Client = genai.Client(api_key= API_KEY)
 
 class Prompt(BaseModel):
