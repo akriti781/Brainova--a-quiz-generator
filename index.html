@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brainova AI Quiz Generator</title>
+ 
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+
+        rel="stylesheet">
+ 
+    <style>
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+            box-sizing: border-box;
+
+            font-family: "Poppins", sans-serif;
+
+        }
+ 
+        body {
+
+            min-height: 100vh;
+
+            background:
+
+                radial-gradient(circle at top left, #2563eb 0%, transparent 30%),
+
+                radial-gradient(circle at bottom right, #7c3aed 0%, transparent 30%),
+
+                #0f172a;
+ 
+            color: white;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            padding: 40px;
+
+        }
+ 
+        .container {
+
+            width: 100%;
+
+            max-width: 1000px;
+ 
+            background: rgba(255, 255, 255, 0.06);
+ 
+            border: 1px solid rgba(255, 255, 255, 0.08);
+ 
+            backdrop-filter: blur(18px);
+ 
+            border-radius: 30px;
+ 
+            padding: 40px;
+ 
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+
+        }
+ 
+        .logo {
+
+            width: 75px;
+
+            height: 75px;
+
+            margin: auto;
+
+            margin-bottom: 20px;
+ 
+            border-radius: 22px;
+ 
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+ 
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+ 
+            font-size: 30px;
+
+            font-weight: 700;
+
+        }
+ 
+        h1 {
+
+            text-align: center;
+
+            font-size: 42px;
+
+            margin-bottom: 10px;
+ 
+            background: linear-gradient(to right, #60a5fa, #c084fc);
+ 
+            -webkit-background-clip: text;
+
+            -webkit-text-fill-color: transparent;
+
+        }
+ 
+        .subtitle {
+
+            text-align: center;
+
+            color: #cbd5e1;
+
+            margin-bottom: 35px;
+
+        }
+ 
+        .search-box {
+
+            display: flex;
+
+            gap: 15px;
+
+            margin-bottom: 30px;
+
+        }
+ 
+        input {
+
+            flex: 1;
+
+            padding: 18px;
+ 
+            border-radius: 16px;
+ 
+            border: none;
+
+            outline: none;
+ 
+            background: rgba(255, 255, 255, 0.08);
+ 
+            color: white;
+
+            font-size: 16px;
+ 
+            border: 1px solid rgba(255, 255, 255, 0.08);
+
+        }
+ 
+        input::placeholder {
+
+            color: #94a3b8;
+
+        }
+ 
+        button {
+
+            padding: 18px 28px;
+ 
+            border: none;
+ 
+            border-radius: 16px;
+ 
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+ 
+            color: white;
+ 
+            font-size: 16px;
+
+            font-weight: 600;
+ 
+            cursor: pointer;
+ 
+            transition: 0.3s;
+
+        }
+ 
+        button:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
+
+        }
+ 
+        .loading {
+
+            display: none;
+
+            text-align: center;
+
+            color: #cbd5e1;
+
+            margin-top: 20px;
+
+        }
+ 
+        .quiz-container {
+
+            margin-top: 30px;
+
+        }
+ 
+        .quiz-card {
+
+            background: rgba(255, 255, 255, 0.05);
+ 
+            border: 1px solid rgba(255, 255, 255, 0.08);
+ 
+            border-radius: 22px;
+ 
+            padding: 25px;
+ 
+            margin-bottom: 25px;
+
+        }
+ 
+        .question {
+
+            font-size: 20px;
+
+            font-weight: 600;
+
+            margin-bottom: 20px;
+
+            line-height: 1.6;
+
+        }
+ 
+        .option {
+
+            padding: 15px;
+
+            border-radius: 12px;
+ 
+            background: rgba(255, 255, 255, 0.05);
+ 
+            margin-bottom: 12px;
+ 
+            cursor: pointer;
+ 
+            transition: 0.2s;
+ 
+            border: 1px solid rgba(255, 255, 255, 0.05);
+
+        }
+ 
+        .option:hover {
+
+            background: rgba(255, 255, 255, 0.12);
+
+        }
+ 
+        .correct {
+
+            background: rgba(34, 197, 94, 0.25);
+
+            border: 1px solid #22c55e;
+
+        }
+ 
+        .wrong {
+
+            background: rgba(239, 68, 68, 0.25);
+
+            border: 1px solid #ef4444;
+
+        }
+ 
+        .score-box {
+
+            margin-top: 30px;
+ 
+            text-align: center;
+ 
+            font-size: 24px;
+
+            font-weight: 600;
+ 
+            display: none;
+
+        }
+ 
+        .error {
+
+            background: rgba(255, 0, 0, 0.08);
+ 
+            border: 1px solid rgba(255, 0, 0, 0.2);
+ 
+            padding: 20px;
+ 
+            border-radius: 16px;
+ 
+            color: #fca5a5;
+
+        }
+ 
+        @media(max-width:700px) {
+ 
+            .container {
+
+                padding: 25px;
+
+            }
+ 
+            h1 {
+
+                font-size: 32px;
+
+            }
+ 
+            .search-box {
+
+                flex-direction: column;
+
+            }
+ 
+            button {
+
+                width: 100%;
+
+            }
+ 
+        }
+</style>
+</head>
+ 
+<body>
+ 
+    <div class="container">
+ 
+        <div class="logo">
+
+            B
+</div>
+ 
+        <h1>Brainova</h1>
+ 
+        <p class="subtitle">
+
+            AI Powered Quiz Generator
+</p>
+ 
+        <div class="search-box">
+ 
+            <input
+
+                type="text"
+
+                id="prompt"
+
+                placeholder="Generate a hard quiz on Python"
+>
+ 
+            <button onclick="generateQuiz()">
+
+                Generate Quiz
+</button>
+ 
+        </div>
+ 
+        <div class="loading" id="loading">
+
+            Generating Quiz...
+</div>
+ 
+        <div class="quiz-container" id="quizContainer"></div>
+ 
+        <div class="score-box" id="scoreBox"></div>
+ 
+    </div>
+ 
+    <script>
+ 
+        let score = 0;
+ 
+        async function generateQuiz() {
+ 
+            const prompt = document.getElementById("prompt").value;
+ 
+            const loading = document.getElementById("loading");
+ 
+            const quizContainer = document.getElementById("quizContainer");
+ 
+            const scoreBox = document.getElementById("scoreBox");
+ 
+            score = 0;
+ 
+            scoreBox.style.display = "none";
+ 
+            if (!prompt) {
+ 
+                alert("Please enter a topic");
+ 
+                return;
+
+            }
+ 
+            loading.style.display = "block";
+ 
+            quizContainer.innerHTML = "";
+ 
+            try {
+ 
+                const response = await fetch("http://127.0.0.1:8000/ask", {
+ 
+                    method: "POST",
+ 
+                    headers: {
+
+                        "Content-Type": "application/json"
+
+                    },
+ 
+                    body: JSON.stringify({
+
+                        prompt: prompt
+
+                    })
+ 
+                });
+ 
+                const data = await response.json();
+ 
+                console.log(data);
+ 
+                const cleanedResponse = data.response
+
+                    .replace(/```json/g, "")
+
+                    .replace(/```/g, "")
+
+                    .trim();
+ 
+                const quizData = JSON.parse(cleanedResponse);
+ 
+                loading.style.display = "none";
+ 
+                quizData.quiz.forEach((q, index) => {
+ 
+                    const card = document.createElement("div");
+ 
+                    card.className = "quiz-card";
+ 
+                    const question = document.createElement("div");
+ 
+                    question.className = "question";
+ 
+                    question.innerHTML = `${index + 1}. ${q.question}`;
+ 
+                    card.appendChild(question);
+ 
+                    q.options.forEach(option => {
+ 
+                        const optionDiv = document.createElement("div");
+ 
+                        optionDiv.className = "option";
+ 
+                        optionDiv.innerText = option;
+ 
+                        optionDiv.onclick = () => {
+ 
+                            const allOptions = card.querySelectorAll(".option");
+ 
+                            allOptions.forEach(opt => {
+
+                                opt.style.pointerEvents = "none";
+
+                            });
+ 
+                            if (option === q.correct_answer) {
+ 
+                                optionDiv.classList.add("correct");
+ 
+                                score++;
+ 
+                            } else {
+ 
+                                optionDiv.classList.add("wrong");
+ 
+                                allOptions.forEach(opt => {
+ 
+                                    if (opt.innerText === q.correct_answer) {
+ 
+                                        opt.classList.add("correct");
+ 
+                                    }
+ 
+                                });
+ 
+                            }
+ 
+                            checkCompletion();
+ 
+                        };
+ 
+                        card.appendChild(optionDiv);
+ 
+                    });
+ 
+                    quizContainer.appendChild(card);
+ 
+                });
+ 
+            }
+ 
+            catch (error) {
+ 
+                loading.style.display = "none";
+ 
+                console.log(error);
+ 
+                quizContainer.innerHTML = `
+ 
+                    <div class="error">
+
+                        Failed to generate quiz
+</div>
+ 
+                `;
+
+            }
+
+        }
+ 
+        function checkCompletion() {
+ 
+            const disabledOptions = document.querySelectorAll(".option[style*='pointer-events: none']");
+ 
+            const totalQuestions = document.querySelectorAll(".quiz-card").length;
+ 
+            if (disabledOptions.length / 4 === totalQuestions) {
+ 
+                const scoreBox = document.getElementById("scoreBox");
+ 
+                scoreBox.style.display = "block";
+ 
+                scoreBox.innerHTML = `
+
+                    You scored ${score} / ${totalQuestions}
+
+                `;
+
+            }
+ 
+        }
+ 
+    </script>
+ 
+</body>
+ 
+</html>
+ 
